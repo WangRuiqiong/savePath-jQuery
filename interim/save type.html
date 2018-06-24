@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Document</title>
+    <style></style>
+    <script src="jquery-3.3.1.js"></script>
+</head>
+<body>
+<p>
+    保存路径：\\<span class="didian1"></span>
+    <span  class="fangxiang1"></span>
+    <span  class="shijian1"></span>
+    <span  class="weifanma1"></span>
+    <span  class="shebeibianma1"></span>
+        <span  class="chepai1">
+        </span><span  class="banbenhao1">
+        </span><span  class="fangweima1"></span>
+</p>
+<p>根目录</p>
+<p class="operate">
+    <select class="didian" style="width:80px">
+        <!--<option>地点</option>-->
+
+    </select>\\
+    <select class="fangxiang" style="width:80px">
+        <!--<option>方向</option>-->
+
+    </select>\\
+    <select class="shijian" style="width:80px">
+        <!--<option>时间</option>-->
+
+    </select>\\
+    <select class="weifanma" style="width:80px">
+        <!--<option>违法码</option>-->
+
+    </select>\\
+    <select class="shebeibianma" style="width:80px">
+        <!--<option>设备编码</option>-->
+
+    </select>\\
+    <select class="chepai" style="width:80px">
+        <!--<option>车牌</option>-->
+
+    </select>\\
+    <select class="banbenhao" style="width:80px">
+        <!--<option>版本号</option>-->
+
+    </select>\\
+    <select class="fangweima" style="width:80px">
+        <!--<option>防伪码</option>-->
+
+    </select>
+</p>
+<script>
+    $(()=>{
+        //启用 严格模式
+        "use strict";
+        let val = ["不启用","地点","方向","时间","违法码","设备编码","车牌","版本号","防伪码"];
+        for(let i=0;i<val.length;i++){
+            $("p.operate").children().append(`<option value="${i}">${val[i]}</option>`);
+        }
+        $("p.operate").on("change","select",function(){
+            //获取当前option相对于select的下标位置
+            let index = this.selectedIndex;
+            //根据值下标位置到当前的select相应的option的文本内容
+            let html = $(this).children()[index];
+            let text = $(html).text();
+            let cla = $(this).attr("class");
+            //如果保存路径中的span没有被选中的option的文本内容
+            if($("p>span").text().indexOf(text) == -1){
+                //先获取相应class的span元素的文本内容，通过文本内容获取当前操作select元素的option的HTML
+                let newText = $(`.${cla}1`).text().slice(0,$(`.${cla}1`).text().indexOf("\\"));
+                let ht =$(this).find("option:contains("+newText+")");
+                //对option获取的文本内容进行处理，追加到相应class的span的HTML中
+                $(`.${cla}1`).html(text+"\\"+"\\");
+                //如果option获取的文本内容不是 不启用
+                if(text != "不启用"){
+                    $(this).siblings("select").find("option:contains("+text+")").remove();
+                    if(ht.length == 1){
+                        $("select").append(ht);
+                    }
+                }else{
+                    //如果是 不启用 就将相应的class元素的option的内容请空，并向后追加html
+                    $(`.${cla}1`).html("");
+                    $("select").append(ht);
+                }
+                //获取当前option的value值,如果保存路径不重复
+                let val = $(this).val();
+            }
+        });
+    });
+</script>
+</body>
+</html>
